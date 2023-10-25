@@ -1,7 +1,7 @@
 import os
 import shutil
 import sys
-sys.path.append('../')
+sys.path.append('/media/anlab/data-2tb/ANLAB_THUY/ImageSearcher/cnnimageretrieval-pytorch')
 
 import cv2
 import numpy as np 
