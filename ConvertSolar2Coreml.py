@@ -55,7 +55,7 @@ def euclidean_distance(list1, list2):
 class Network(nn.Module):
     def __init__(self, model):
         super().__init__()
-        self.model = model.cpu()
+        self.model = model
         self.mean = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
         self.std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
     def forward(self,x):
@@ -68,7 +68,7 @@ class Network(nn.Module):
         # return (reshaped_tensor1+reshaped_tensor2)/2
         return reshaped_tensor1
 #Sua kien truc model "/home/anlab/anaconda3/envs/testconvertmodel/lib/python3.7/site-packages/coremltools/models/neural_network/builder.py" 
-state = torch.load(os.path.join(get_data_root(), 'networks/model_best.pth.tar'),map_location=torch.device('cpu'))
+state = torch.load(os.path.join(get_data_root(), 'networks/model_best.pth.tar'),map_location=torch.device('cuda'))
 net_params = {}
 net_params['architecture'] = state['meta']['architecture']
 net_params['pooling'] = state['meta']['pooling'] 
@@ -120,9 +120,9 @@ mlprogram = ct.convert(
     inputs=[input_tensor],
     outputs=[ct.TensorType(name="embeddings")],
     convert_to="neuralnetwork",
-    compute_units=ct.ComputeUnit.CPU_ONLY,
+    compute_units=ct.ComputeUnit.ALL,
 )
 spec = mlprogram.get_spec()
 outputmodel = ct.models.MLModel(spec, weights_dir=mlprogram.weights_dir)
-saved_model = 'ModelConvert/TestModel/Solar300_image_CPU.mlmodel'
+saved_model = 'ModelConvert/TestModel/Solar300_image_ALL_V1.mlmodel'
 outputmodel.save(saved_model)
